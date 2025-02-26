@@ -1,9 +1,9 @@
-title: Nighthawk Pages 
-description: "Class of 2025"
-owner_name: John Mortensen
-github_username: nighthawkcoders
-github_repo: "student_2025" 
-baseurl: "/student_2025"
+title: Grah
+description: "McHopiee's CSSE Coding Blog"
+owner_name: Hope Fune 
+github_username: McHopiee
+github_repo: "Grah_Blog" 
+# baseurl: "/student_2025"
 future: true
 remote_theme: jekyll/minima
 minima:
