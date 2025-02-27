@@ -48,62 +48,106 @@ class GameLevelBasement {
         keypress: { up: 87, left: 65, down: 83, right: 68 } // W, A, S, D
     };
 
+     // Conversation flow for Asaka
+     const conversationFlowAsaka = {
+      start: {
+        question: "Do you remember your name?",
+        answers: {
+          "No.": "no",
+          "Yes.": "yes"
+        }
+      },
+      no: {
+        question: "What do you remember?",
+        answers: {
+          "Nothing.": "explore",
+          "Chat": "chat"
+        }
+      },
+      feelingBad: {
+        question: "I'm sorry to hear that. Do you want to talk about it?",
+        answers: {
+          "Yes": "talkAboutIt",
+          "No": "changeTopic"
+        }
+      },
+      explore: {
+        question: "Exploring sounds fun! Where do you want to go?",
+        answers: {
+          "Forest": "forest",
+          "City": "city"
+        }
+      },
+      chat: {
+        question: "Let's chat! What's on your mind?",
+        answers: {
+          "Hobbies": "hobbies",
+          "Work": "work"
+        }
+      },
+      talkAboutIt: {
+        question: "I'm here to listen. What's bothering you?",
+        answers: {
+          "Stress": "stress",
+          "Health": "health"
+        }
+      },
+      changeTopic: {
+        question: "Alright, let's change the topic. What do you want to talk about?",
+        answers: {
+          "Hobbies": "hobbies",
+          "Work": "work"
+        }
+      },
+      // Add more conversation nodes as needed
+    };
+
 
     // NPC data for Asaka
     const sprite_src_asaka = path + "/images/gamify/asaka.png"; // be sure to include the path
-    const sprite_greet_asaka = "I-I'm Asaka.. not like I-I'm happy to see you or anything..";
+    const sprite_greet_asaka = "You don't belong here, do you? ( Press e to interact with Asaka, she will ask you questions. There will be two options, please type in the whole response you would like to respond with. )";
     const sprite_data_asaka = {
         id: 'Asaka',
         greeting: sprite_greet_asaka,
         src: sprite_src_asaka,
-        SCALE_FACTOR: 4,  // Adjust this based on your scaling needs
+        SCALE_FACTOR: 5,  // Adjust this based on your scaling needs
         ANIMATION_RATE: 50,
         pixels: {height: 316, width: 189},
-        INIT_POSITION: { x: (width / 2), y: (height / 3)},
+        INIT_POSITION: { x: (width / 2), y: (height / 1.7)},
         orientation: {rows: 4, columns: 3 },
         down: {row: 0, start: 0, columns: 3 },  // This is the stationary npc, down is default 
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
-        // Linux command quiz
-        quiz: { 
-          title: "Linux Command Quiz",
-          questions: [
-            "Which command is used to list files in a directory?\n1. ls\n2. dir\n3. list\n4. show",
-            "Which command is used to change directories?\n1. cd\n2. chdir\n3. changedir\n4. changedirectory",
-            "Which command is used to create a new directory?\n1. mkdir\n2. newdir\n3. createdir\n4. makedir",
-            "Which command is used to remove a file?\n1. rm\n2. remove\n3. delete\n4. erase",
-            "Which command is used to remove a directory?\n1. rmdir\n2. removedir\n3. deletedir\n4. erasedir",
-            "Which command is used to copy files?\n1. cp\n2. copy\n3. duplicate\n4. xerox",
-            "Which command is used to move files?\n1. mv\n2. move\n3. transfer\n4. relocate",
-            "Which command is used to view a file?\n1. cat\n2. view\n3. show\n4. display",
-            "Which command is used to search for text in a file?\n1. grep\n2. search\n3. find\n4. locate",
-            "Which command is used to view the contents of a file?\n1. less\n2. more\n3. view\n4. cat" 
-          ] 
-        },
+        conversation: new Conversation(conversationFlowAsaka),
         reaction: function() {
           alert(sprite_greet_asaka);
-        },
+        },   
+        // Interaction function for Asaka
         interact: function() {
-          let quiz = new Quiz(); // Create a new Quiz instance
-          quiz.initialize();
-          quiz.openPanel(sprite_data_asaka.quiz);
+          const conversation = sprite_data_asaka.conversation;
+          const question = conversation.getCurrentQuestion();
+          const answers = conversation.getCurrentAnswers();
+          let answer = prompt(`${question}\n${answers.join('\n')}`);
+          if (answers.includes(answer)) {
+            conversation.answerQuestion(answer);
+          } else {
+            alert("Invalid answer. Please try again.");
           }
-    
-      };
+        }
+    };
 
 
-
-      // NPC data for Octocat
-      const sprite_src_octocat = path + "/images/gamify/octocat.png"; // be sure to include the path
-      const sprite_greet_octocat = "Hi I am Octocat! I am the GitHub code code code collaboration mascot";
-      const sprite_data_octocat = {
-        id: 'Octocat',
-        greeting: sprite_greet_octocat,
-        src: sprite_src_octocat,
-        SCALE_FACTOR: 10,  // Adjust this based on your scaling needs
+      // NPC data for Miku
+      const sprite_src_miku = path + "/images/gamify/miku.png"; // be sure to include the path
+      const sprite_greet_miku = "OMG HI UWU MY NAME IS MIKU I'M SO SUPER DUPER STOKED TO MEET YOU!";
+      const sprite_data_miku = {
+        id: 'Miku',
+        greeting: sprite_greet_miku,
+        src: sprite_src_miku,
+        SCALE_FACTOR: 5,  // Adjust this based on your scaling needs
         ANIMATION_RATE: 50,
-        pixels: {height: 301, width: 801},
-        INIT_POSITION: { x: (width / 4), y: (height / 4)},
-        orientation: {rows: 1, columns: 4 },
+        pixels: {height: 316, width: 189},
+        INIT_POSITION: { x: (width / 12), y: (height / 1.8)},
+        orientation: {rows: 4, columns: 3 },
         down: {row: 0, start: 0, columns: 3 },  // This is the stationary npc, down is default 
         hitbox: { widthPercentage: 0.1, heightPercentage: 0.1 },
         // GitHub command quiz 
@@ -123,28 +167,28 @@ class GameLevelBasement {
           ] 
         },
         reaction: function() {
-          alert(sprite_greet_octocat);
+          alert(sprite_greet_miku);
         },
         interact: function() {
           let quiz = new Quiz(); // Create a new Quiz instance
           quiz.initialize();
-          quiz.openPanel(sprite_data_octocat.quiz);
+          quiz.openPanel(sprite_data_miku.quiz);
         }
     }
   
 
-    const sprite_src_robot = path + "/images/gamify/robot.png"; // be sure to include the path
-    const sprite_greet_robot = "Hi I am Robot, the Jupyter Notebook mascot.  I am very happy to spend some linux shell time with you!";
-    const sprite_data_robot = {
-      id: 'Robot',
-      greeting: sprite_greet_robot,
-      src: sprite_src_robot,
-      SCALE_FACTOR: 10,  // Adjust this based on your scaling needs
-      ANIMATION_RATE: 100,
-      pixels: {height: 316, width: 627},
-      INIT_POSITION: { x: (width * 3 / 4), y: (height * 1 / 4)},
-      orientation: {rows: 3, columns: 6 },
-      down: {row: 1, start: 0, columns: 6 },  // This is the stationary npc, down is default 
+    const sprite_src_nezuko = path + "/images/gamify/nezuko.png"; // be sure to include the path
+    const sprite_greet_nezuko = "I've never seen you before. Are you lost? Well, even if you are.. I don't think I'm going to help you get out of here.";
+    const sprite_data_nezuko = {
+      id: 'Nezuko',
+      greeting: sprite_greet_nezuko,
+      src: sprite_src_nezuko,
+      SCALE_FACTOR: 5,  // Adjust this based on your scaling needs
+      ANIMATION_RATE: 50,
+      pixels: {height: 316, width: 189},
+      INIT_POSITION: { x: (width / 1.3), y: (height / 1.3)},
+      orientation: {rows: 4, columns: 3 },
+      down: {row: 0, start: 0, columns: 3 },  // This is the stationary npc, down is default 
       hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
       // Linux command quiz
       quiz: { 
@@ -163,72 +207,49 @@ class GameLevelBasement {
         ] 
       },
       reaction: function() {
-        alert(sprite_greet_robot);
+        alert(sprite_greet_nezuko);
       },
       interact: function() {
         let quiz = new Quiz(); // Create a new Quiz instance
         quiz.initialize();
-        quiz.openPanel(sprite_data_robot.quiz);
+        quiz.openPanel(sprite_data_nezuko.quiz);
       }
     }
-
-    // NPC Data for R2D2
-    const sprite_src_r2d2 = path + "/images/gamify/r2_idle.png"; // be sure to include the path
-    const sprite_greet_r2d2 = "Hi I am R2D2.  Leave this planet and help defent the rebel base on Hoth!";
-    const sprite_data_r2d2 = {
-      id: 'StarWarsR2D2',
-      greeting: sprite_greet_r2d2,
-      src: sprite_src_r2d2,
-      SCALE_FACTOR: 8,  // Adjust this based on your scaling needs
-      ANIMATION_RATE: 100,
-      pixels: {width: 505, height: 223},
-      INIT_POSITION: { x: (width * 1 / 4), y: (height * 3 / 4)}, // Adjusted position
-      orientation: {rows: 1, columns: 3 },
-      down: {row: 0, start: 0, columns: 3 },  // This is the stationary npc, down is default 
-      hitbox: { widthPercentage: 0.1, heightPercentage: 0.2 },
-      /* Reaction function
-      *  This function is called when the player interacts with the NPC
-      *  It displays an alert with the greeting message
-      */
-      reaction: function() {
-        alert(sprite_greet_r2d2);
-      },
-      /* Interact function
-      *  This function is called when the player interacts with the NPC
-      *  It pauses the main game, creates a new GameControl instance with the StarWars level,
-      */
-      interact: function() {
-        // Set a primary game reference from the game environment
-        let primaryGame = gameEnv.gameControl;
-        // Define the game in game level
-        let levelArray = [GameLevelStarWars];
-        // Define a new GameControl instance with the StarWars level
-        let gameInGame = new GameControl(path,levelArray);
-        // Pause the primary game 
-        primaryGame.pause();
-        // Start the game in game
-        gameInGame.start();
-        // Setup "callback" function to allow transition from game in gaame to the underlying game
-        gameInGame.gameOver = function() {
-          // Call .resume on primary game
-          primaryGame.resume();
-        }
-      }
-
-    };
 
     // List of objects defnitions for this level
     this.classes = [
       { class: Background, data: image_data_basement },
       { class: Player, data: sprite_data_degen },
       { class: Npc, data: sprite_data_asaka },
-      { class: Npc, data: sprite_data_octocat },
-      { class: Npc, data: sprite_data_robot },
-      { class: Npc, data: sprite_data_r2d2 },
+      { class: Npc, data: sprite_data_miku },
+      { class: Npc, data: sprite_data_nezuko },
     ];
     
   }
 
+}
+
+// Conversation class for Asaka 
+class Conversation {
+  constructor(flow) {
+    this.flow = flow;
+    this.currentNode = "start";
+  }
+
+  getCurrentQuestion() {
+    return this.flow[this.currentNode].question;
+  }
+
+  getCurrentAnswers() {
+    return Object.keys(this.flow[this.currentNode].answers);
+  }
+
+  answerQuestion(answer) {
+    const nextNode = this.flow[this.currentNode].answers[answer];
+    if (nextNode) {
+      this.currentNode = nextNode;
+    }
+  }
 }
 
 export default GameLevelBasement;
